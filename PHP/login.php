@@ -6,43 +6,23 @@ $Databaseusername = trim(fgets($authFile));
 $Databasepassword = trim(fgets($authFile));
 fclose($authFile);
 
-
-/*
-$results = $conn>query("SELECT * FROM student WHERE course='$a'");
-while($row=$results->fetch())
-{
-    echo "<P>";
-    echo " student ID ". $row["ID"] . "<br/>";
-    echo " name " . $row["name"] . "<br/>";
-    echo "phone " . $row["phone"] . "<br/>" ;
-    echo "</P>";
-}*/
-    $username = $_GET['username'];
+    $username = $_GET['username'];// get username from ajax. 
     $password = $_GET['password'];
-	//if($username == "admin" & $password == "admin"){
-    //Due to no access to database this is used to simulate database query.
     try {
-        $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword);
-        $results = $conn->query("SELECT * FROM users WHERE username='$username' AND password='$password'");
-        $row = $results->fetch();
+        $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
+        $results = $conn->query("SELECT * FROM users WHERE username='$username' AND password='$password'"); // Run's query on database. NOTE: sql injection vunruable in current state.
+        $row = $results->fetch(); // return first row from the reults of the query, There should only be one row as usernames are uniqe. 
         if ($row != null) {
             $_SESSION["name"] = $row["name"];
-            $_SESSION["username"] = $username;
-            $_SESSION["password"] = $password;
+            $_SESSION["username"] = $username; // all usernames must be uniqe, so no more then one row should be found.
+            $_SESSION["password"] = $password; // Maybe a bad idea to store the password in a session. maybe make null after use in create session.
 		    createSession();
-		    echo json_encode($row);
+		    echo json_encode($row); // Debug purposes. remove in final release
         }else{
 		    echo json_encode("Failure");
         };
     }catch(PDOException $e){
-
-            //$_SESSION["username"] = $username;
-            //$_SESSION["password"] = $password;
-            //$_SESSION["admin"]=1;
-            //$_SESSION["failed"]=1; //this is used for testing, disable code that will try to use the database.
-		    //createSession();
-            echo json_encode("connection failed defaulting to admin");
-            //as PHP myadmin is having trouble but for testing purpose we make it work.
+            echo json_encode("connection failed" + $e);// The connection failed.
     };
 
 function createSession(){

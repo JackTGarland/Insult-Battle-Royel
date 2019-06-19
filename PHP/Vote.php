@@ -1,0 +1,2 @@
+// After sending there insult the user can go to this page that will show all current insults and the user can vote on there favorute.
+// This page can only be accessed after a user has done an insult and this a session varaible will be made and a entry to the database.

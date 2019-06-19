@@ -1,7 +1,6 @@
 <?php   
 session_start();
 
-session_destroy();
+session_destroy(); // Removes the current sesion.
 
-header("location: login.html");
 ?>
