@@ -36,13 +36,32 @@ function matchCheck(){
         };
     }
 };
+
+function saveInsult(){
+    $authFile = fopen("auth.txt", "r");
+    $Databaseusername = trim(fgets($authFile));
+    $Databasepassword = trim(fgets($authFile));
+    fclose($authFile);
+
+    $insult = $_POST['insult'];
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
+        $statment = $conn->query("INSERT INTO insult (userid, insult) VALUES (:user, :insult)"); // Run's query on database. NOTE: sql injection vunruable in current state.
+        $statment->bindParam(':user', $_SESSION["userid"]);
+        $statment->bindParam(':insult', $insullt);
+        $statment->execute();
+        echo json_encode($statment->fetch());
+
+    
+    }catch(PDOException $e){
+        echo json_encode("Error " + $e->getMessage());// The connection failed.
+    };
+};
+if($_SERVER['request_method'] == 'POST'){
+    saveInsult();
+}else{
+    matchCheck();
+};
 //front end code
-
-matchCheck();
-$authFile = fopen("auth.txt", "r");
-$Databaseusername = trim(fgets($authFile));
-$Databasepassword = trim(fgets($authFile));
-fclose($authFile);
-
 // Timedisplay in Javascript. Time remaining is StartDate + 24 hour's + 24 for each bracket. 
 ?>

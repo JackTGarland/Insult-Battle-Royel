@@ -6,8 +6,8 @@ $Databaseusername = trim(fgets($authFile));
 $Databasepassword = trim(fgets($authFile));
 fclose($authFile);
 
-    $username = $_GET['username'];// get username from ajax. 
-    $password = $_GET['password'];
+    $username = $_POST['username'];// get username from ajax. 
+    $password = $_POST['password'];
     try {
         $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
         $results = $conn->query("SELECT * FROM login WHERE username='$username' AND password='$password'"); // Run's query on database. NOTE: sql injection vunruable in current state.

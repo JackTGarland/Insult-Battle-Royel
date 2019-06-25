@@ -3,6 +3,7 @@ function ajexrequest() {
 
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
+    var creditals = "username="+username+"&password="+password
     //xhr2.addEventListner("load", responceRecived(xhr2));//crashes on this line
     xhr2.onreadystatechange = function(){
         if (xhr2.readyState == 4 && xhr2.status == 200) {
@@ -10,8 +11,8 @@ function ajexrequest() {
             //document.getElementById('results').innerHTML = (JSON.stringify(xhr2.response));
         };
     }
-    xhr2.open("GET", '/PHP/login.php?username=' + username + '&password=' + password);
-    xhr2.send();
+    xhr2.open("POST", '/PHP/login.php');
+    xhr2.send(creditals);
     //document.getElementById('results').innerHTML = e.target.responceText;
 };
 /*function responceRecived(e){
