@@ -12,7 +12,7 @@ function matchCheck(){
 
         try {
             $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
-            $results = $conn->query("SELECT userID FROM login WHERE fightAvalible=1"); // Run's query on database. NOTE: sql injection vunruable in current state.
+            $results = $conn->query("SELECT userID FROM login WHERE fightAvalible=1"); // Run's query on database. NOTE: unsure but on current understannding this is not sql injection vunruable in current state.
             $row = $results->fetchAll(); // return all rows from the reults of the query, There should only be one row as usernames are uniqe. 
             if (sizeof($row) == 1) {
                 echo json_encode("There are no fight's avalible.");
@@ -25,7 +25,9 @@ function matchCheck(){
                     }
                 };
                 $_SESSION["matched"] = $row["userid"];
-                $statment = $conn->prepare("INSERT INTO fight (player1, player2) VALUES (:user1, :user2)");
+                $statment = $conn->prepare("INSERT INTO fight (player1, player2) VALUES (:user1, :user2);
+                INSERT INTO login (fightAvalible) VALUES (0) WHERE username = :user1;
+                INSERT INTO login (fightAvalible) VALUES (0) WHERE userid = :user2");
                 $statment->bindParam(':user1', $_SESSION["username"]);
                 $statment->bindParam(':user2', $row["userid"]);
                 $statment->execute();
@@ -46,7 +48,8 @@ function saveInsult(){
     $insult = $_POST['insult'];
     try {
         $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
-        $statment = $conn->query("INSERT INTO insult (userid, insult) VALUES (:user, :insult)"); // Run's query on database. NOTE: sql injection vunruable in current state.
+        $statment = $conn->query("INSERT INTO insult (userid, insult) VALUES (:user, :insult);
+        INSERT INTO login (hasInsulted) VALUES (1)"); // Run's query on database. NOTE: unsure but on current understannding this is not sql injection vunruable in current state.
         $statment->bindParam(':user', $_SESSION["userid"]);
         $statment->bindParam(':insult', $insullt);
         $statment->execute();
