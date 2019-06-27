@@ -3,15 +3,18 @@ function ajexrequest() {
 
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
+    var creditals = "username="+username+"&password="+password
     //xhr2.addEventListner("load", responceRecived(xhr2));//crashes on this line
     xhr2.onreadystatechange = function(){
         if (xhr2.readyState == 4 && xhr2.status == 200) {
             document.getElementById('failed').innerHTML = (JSON.parse(xhr2.response));
             //document.getElementById('results').innerHTML = (JSON.stringify(xhr2.response));
-        };
+        }else{
+            alertError(xhr2.status);
+        }
     }
-    xhr2.open("GET", '/PHP/login.php?username=' + username + '&password=' + password);
-    xhr2.send();
+    xhr2.open("POST", '/PHP/login.php');
+    xhr2.send(creditals);
     //document.getElementById('results').innerHTML = e.target.responceText;
 };
 /*function responceRecived(e){
@@ -20,12 +23,19 @@ function ajexrequest() {
 };*/
 function logout() {
     var xhr2 = new XMLHttpRequest();
+    xhr2.onreadystatechange = function(){
+        if (xhr2.readyState == 4 && xhr2.status == 200) {
+            location.reload();
+        }else{
+            alertError(xhr2.status);
+        };
+    };
     
     xhr2.open("GET", '/PHP/logout.php');
     xhr2.send();
 
 };
-function filetest(){
+function filetest(){ // used as a simple debug, make a button call this function and it will execute the debug code written in dbconnection.php
     var xhr2 = new XMLHttpRequest();
     xhr2.onreadystatechange = function(){
         if (xhr2.readyState == 4 && xhr2.status == 200) {
@@ -42,6 +52,7 @@ function createAccount(){
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var fName = document.getElementById("fName").value;
+    var creditals = "username="+username+"&password="+password+"&firstname="+fName;
     if(username != null && password != null && fName != null){
         xhr2.onreadystatechange = function(){
             if (xhr2.readyState == 4 && xhr2.status == 200) {
@@ -49,58 +60,21 @@ function createAccount(){
             }
         }
         xhr2.open("POST", '/PHP/createAccount.php?username=' + username + '&password=' + password + '&name=' + fName);
-        xhr2.send();
+        xhr2.send(creditals);
     }
     else{
         
+        alertError(xhr2.status);
     }
 };
+/*
 function endorse() {
     var e = window.event,
         btn = e.target || e.srcElement;
     
 };
-function search(){
-    var xhr2 = new XMLHttpRequest();
-    var search = document.getElementById('search').value;
-    document.getElementById('results').innerHTML = "";
-    if(search != null){
-        xhr2.onreadystatechange = function(){
-            if (xhr2.readyState == 4 && xhr2.status == 200) {
-                if(JSON.parse(xhr2.response)==="NRF"){
-                    document.getElementById('results').innerHTML = "No Results Found";
-                }else{
-                for(var i = 0; i < JSON.parse(xhr2.response).length; i++){
-                    var row = document.createElement("div");
-                    var br = document.createElement("br");
-                    var span = document.createElement("span");
-                    br.setAttribute("id", "br"+i);
-                    for(var key in JSON.parse(xhr2.response)[i]){
-                        if(JSON.parse(xhr2.response)[i].hasOwnProperty(key)){
-                            if(isNaN(key)==false){
-                                console.log(key);
-                            }else{
-                        var rowelements = document.createElement("div");
-                        rowelements.setAttribute("id", "rowelement"+key);
-                        span.setAttribute("id", "span"+i);
-                        span.innerHTML = '<button id="button'+i+'" onclick="endorse()" value="endorse"> endorse </button>';
-                        row.appendChild(rowelements);
-                        rowelements.innerHTML =JSON.parse(xhr2.response)[i][key];
-                            };
-                        };
-                        
-                    }
-                    row.appendChild(span);
-                    row.appendChild(br);
-                    document.getElementById("results").appendChild(row);
-                };
-            };
-        }
-        }
-        xhr2.open("GET", '/PHP/search.php?search=' + search);
-        xhr2.send();
-    }else{
-        document.getElementById()
-    }
+This is legacy code from a old project but I will need this for the vote section to find what vote button was pressed, as such I am leaving it here for when I need to imploment that section. */
 
+function alertError(err){
+    alert("There was an error status code :" + err);
 };

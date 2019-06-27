@@ -13,8 +13,10 @@ $fName = $_GET['name'];
 try {
 
     $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword);//Connect's to the database.
-    $results = $conn->query("SELECT username FROM login WHERE username='$username'"); // Run's the statment. NOTE: currently vunrable to SQL injection.
-        $row=$results->fetchAll(); // Stores all rows in $row.
+    $statment = $conn->prepare("SELECT username FROM login WHERE username=:user"); // Run's the statment. NOTE: currently vunrable to SQL injection.
+    $statment->bindParam(':user', $username);
+    $statment->execute();
+        $row=$statment->fetchAll(); // Stores all rows in $row.
         if($row != null){
             echo json_encode("That username is already taken"); // If anything is returned then the username is taken.
         }else{

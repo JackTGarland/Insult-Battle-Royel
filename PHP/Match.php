@@ -12,10 +12,10 @@ function matchCheck(){
 
         try {
             $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
-            $results = $conn->query("SELECT userID FROM login WHERE fightAvalible=1"); // Run's query on database. NOTE: sql injection vunruable in current state.
+            $results = $conn->query("SELECT userID,firstname FROM login WHERE fightAvalible=1"); // Run's query on database. NOTE: unsure but on current understannding this is not sql injection vunruable in current state.
             $row = $results->fetchAll(); // return all rows from the reults of the query, There should only be one row as usernames are uniqe. 
             if (sizeof($row) == 1) {
-                echo json_encode("There are no fight's avalible.");
+                echo json_encode("NFA"); // Returns No FIght's avalible.
             }else{
                 $diffrent = 0;
                 while($diffrent == 0){//This while loop is to pick a random oponut from a list, and ensure that is not the same user.
@@ -24,8 +24,10 @@ function matchCheck(){
                         $diffrent = 1;
                     }
                 };
-                $_SESSION["matched"] = $row["userid"];
-                $statment = $conn->prepare("INSERT INTO fight (player1, player2) VALUES (:user1, :user2)");
+                $_SESSION["matched"] = $row["firstname"];
+                $statment = $conn->prepare("INSERT INTO fight (player1, player2) VALUES (:user1, :user2);
+                INSERT INTO login (fightAvalible) VALUES (0) WHERE username = :user1;
+                INSERT INTO login (fightAvalible) VALUES (0) WHERE userid = :user2");
                 $statment->bindParam(':user1', $_SESSION["username"]);
                 $statment->bindParam(':user2', $row["userid"]);
                 $statment->execute();
@@ -34,15 +36,37 @@ function matchCheck(){
         }catch(PDOException $e){
             echo json_encode("Error " + $e->getMessage());// The connection failed.
         };
-    }
+    }else{
+        echo json_encode($_SESSION["matched"]); // If match already found, will return the match's first name.
+    };
+};
+
+function saveInsult(){
+    $authFile = fopen("auth.txt", "r");
+    $Databaseusername = trim(fgets($authFile));
+    $Databasepassword = trim(fgets($authFile));
+    fclose($authFile);
+
+    $insult = $_POST['insult'];
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
+        $statment = $conn->query("INSERT INTO insult (userid, insult) VALUES (:user, :insult);
+        INSERT INTO login (hasInsulted) VALUES (1)"); // Run's query on database. NOTE: unsure but on current understannding this is not sql injection vunruable in current state.
+        $statment->bindParam(':user', $_SESSION["userid"]);
+        $statment->bindParam(':insult', $insullt);
+        $statment->execute();
+        echo json_encode($statment->fetch());
+
+    
+    }catch(PDOException $e){
+        echo json_encode("Error " + $e->getMessage());// The connection failed.
+    };
+};
+if($_SERVER['request_method'] == 'POST'){
+    saveInsult();
+}else{
+    matchCheck();
 };
 //front end code
-
-matchCheck();
-$authFile = fopen("auth.txt", "r");
-$Databaseusername = trim(fgets($authFile));
-$Databasepassword = trim(fgets($authFile));
-fclose($authFile);
-
 // Timedisplay in Javascript. Time remaining is StartDate + 24 hour's + 24 for each bracket. 
 ?>

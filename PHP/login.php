@@ -6,18 +6,19 @@ $Databaseusername = trim(fgets($authFile));
 $Databasepassword = trim(fgets($authFile));
 fclose($authFile);
 
-    $username = $_GET['username'];// get username from ajax. 
-    $password = $_GET['password'];
+    $username = $_POST['username'];// get username from ajax. 
+    $password = $_POST['password'];
     try {
         $conn = new PDO("mysql:host=localhost;dbname=insultBR;", $Databaseusername, $Databasepassword); // open connection to database
-        $results = $conn->query("SELECT * FROM login WHERE username='$username' AND password='$password'"); // Run's query on database. NOTE: sql injection vunruable in current state.
-        $row = $results->fetch(); // return first row from the reults of the query, There should only be one row as usernames are uniqe. 
+        $statment = $conn->prepare("SELECT * FROM login WHERE username=:user AND password=:pass"); // Run's query on database. NOTE: sql injection vunruable in current state.
+        $statment->bindParam(':user', $username);
+        $statment->bindParam(':pass', $password);
+        $row = $statment->fetch(); // return first row from the reults of the query, There should only be one row as usernames are uniqe. 
         if ($row != null) {
             $_SESSION["name"] = $row["name"];
             $_SESSION["userid"] = $row["userid"];
             $_SESSION["username"] = $username; // all usernames must be uniqe, so no more then one row should be found.
             $_SESSION["password"] = $password; // Maybe a bad idea to store the password in a session. maybe make null after use in create session.
-		    createSession();
 		    echo json_encode($row); // Debug purposes. remove in final release
         }else{
 		    echo json_encode("Failure");
@@ -25,12 +26,5 @@ fclose($authFile);
     }catch(PDOException $e){
             echo json_encode("connection failed" + $e);// The connection failed.
     };
-
-function createSession(){
-   
-     $_SESSION["token"] = (($_SESSION["username"].strlen + $_SESSION["password"].strlen) + $_SESSION["userid"] + 100 / 25) * 100;
-     //A really bad token system but it works for this so I am keeping it for now.
-}
-
 
 ?>
