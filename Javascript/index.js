@@ -7,13 +7,13 @@ function ajexrequest() {
     //xhr2.addEventListner("load", responceRecived(xhr2));//crashes on this line
     xhr2.onreadystatechange = function(){
         if (xhr2.readyState == 4 && xhr2.status == 200) {
-            document.getElementById('failed').innerHTML = (JSON.parse(xhr2.response));
-            //document.getElementById('results').innerHTML = (JSON.stringify(xhr2.response));
+            document.getElementById("success").innerHTML = (JSON.parse(xhr2.response));
+            window.location.href = "./php/match.php";
         }else{
             alertError(xhr2.status);
         }
     }
-    xhr2.open("POST", '/PHP/login.php');
+    xhr2.open("POST", "/PHP/login.php");
     xhr2.send(creditals);
     //document.getElementById('results').innerHTML = e.target.responceText;
 };
@@ -31,7 +31,7 @@ function logout() {
         };
     };
     
-    xhr2.open("GET", '/PHP/logout.php');
+    xhr2.open("GET", "/PHP/logout.php");
     xhr2.send();
 
 };
@@ -39,11 +39,11 @@ function filetest(){ // used as a simple debug, make a button call this function
     var xhr2 = new XMLHttpRequest();
     xhr2.onreadystatechange = function(){
         if (xhr2.readyState == 4 && xhr2.status == 200) {
-            document.getElementById('failed').innerHTML = (JSON.parse(xhr2.response));
+            document.getElementById("failed").innerHTML = (JSON.parse(xhr2.response));
             //document.getElementById('results').innerHTML = (JSON.stringify(xhr2.response));
         };
     }
-    xhr2.open("GET", '/PHP/dbconnection.php');
+    xhr2.open("GET", "/PHP/dbconnection.php");
     xhr2.send();
 };
 function createAccount(){
@@ -59,7 +59,7 @@ function createAccount(){
                 //reload page
             }
         }
-        xhr2.open("POST", '/PHP/createAccount.php?username=' + username + '&password=' + password + '&name=' + fName);
+        xhr2.open("POST", "/PHP/createAccount.php?username=" + username + "&password=" + password + "&name=" + fName);
         xhr2.send(creditals);
     }
     else{

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Insult Page</title>
+    <link rel="stylesheet" href="lib/materialize/css/materialize.min.css">
+    <style>
+        header{
+            color:white;
+        }
+
+        header li{
+            text-align: center;
+        }
+        header span{
+            position: relative
+        }
+
+        main{
+            margin-top:6%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Side Nav Bar-->
+    <ul id="slide-out" class="sidenav">
+
+        <li>
+            <div id="login-container" class="container">
+                    <h3>Register</h3>
+                <div class="input-field">
+                    <input placeholder="" id="loginUsername" type="text" class="validate">
+                    <label for="loginUsername">Username</label>
+                </div>
+
+                <div class="input-field">
+                    <input placeholder="" id="loginPassword" type="password" class="validate">
+                    <label for="loginPassword">Password</label>
+                </div>
+
+                <div class="input-field">
+                    <input placeholder="" id="loginName" type="text" class="validate">
+                    <label for="loginName">First Name</label>
+                </div>
+
+                <a id="btnRegister" class='btn'>Register</a>
+            </div>
+        </li>
+        
+    </ul>
+    <header class="row red">
+        <ul class="col s2 offset-s1">
+            <li id="userId">You are not logged in / Weclome back USER!</li>
+        </ul>
+
+        <ul class="col s2 offset-s6">
+            <li class="col s6"><a id="register_trigger" data-target="slide-out" class='btn sidenav-trigger'>Register</a></li>
+            
+            <li class="col s6" id="btnRegister"><a class='dropdown-trigger btn' data-target='loginDropdown'>Login</a></li>
+        </ul>
+
+        <ul id='registerDropdown' class='dropdown-content'>
+            
+        </ul>
+    </header>
+
+    <main>
+        <h2 id="currentOpponent" class="center-align">Opponent Name</h2>
+        <div class="input-field" style="width:50%;margin-left:auto;margin-right:auto;">
+          <textarea id="textfield_insult" class="materialize-textarea"></textarea>
+          <label for="textfield_insult">Insult</label>
+        </div>
+    </main>
+    <script src="lib/materialize/js/materialize.min.js"></script>
+    <script>
+
+        var sideElems = document.querySelectorAll('.sidenav');
+        M.Sidenav.init(sideElems);
+    </script>
+</body>
+</html>

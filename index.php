@@ -1,8 +1,8 @@
 <?php
 session_start();
-include '../PHP/login.php';
-include '../PHP/logout.php';
-include '../PHP/dbconnection.php';
+include '../php/login.php';
+include '../php/logout.php';
+include '../php/dbconnection.php';
 ?>
 <html>
 <head>
@@ -33,24 +33,5 @@ function statusf() {
 <p id="failed"></p>
 
 </body>
-<?php
-/*function login(){
-    $username = $_GET["username"];
-    $password = $_GET["password"];
-
-    if ($results != null) {
-        $_SESSION['username'] = $username;
-        $_SESSION['password'] = $password;
-		//createSession();
-		echo json_encode('succsess');
-    }else{
-		echo json_encode('Failed');
-    };
-}*/
-/*function createSession(){
-   
-     $_SESSION["token"] = (($_SESSION["username"].strlen + $_SESSION["password"].strlen) + 100 / 25) * 100;
-}*/
-?>
 </html>
 
